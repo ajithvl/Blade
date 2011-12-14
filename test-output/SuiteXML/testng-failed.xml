@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [SuiteXML]">
+  <listeners>
+    <listener class-name="com.blade.lib.RuntimeReporter"/>
+  </listeners>
+  <test name="RegressionXML(failed)" preserve-order="false">
+    <classes>
+      <class name="com.blade.tests.Tester">
+        <methods>
+          <include name="beforeMethod"/>
+          <include name="tearDown"/>
+          <include name="test2"/>
+          <include name="setUp"/>
+          <include name="afterMethod"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

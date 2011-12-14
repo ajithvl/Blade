@@ -32,10 +32,10 @@ import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Http {
+public class HttpUtil {
 
     //private static final boolean debug = false;
-    static final Logger logger = Logger.getLogger(Http.class);
+    static final Logger logger = Logger.getLogger(HttpUtil.class);
 
     /**
      * Makes a GET request to the URI specified and returns the response body

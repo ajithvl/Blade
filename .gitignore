@@ -1,1 +1,6 @@
 /target/
+nbactions.xml
+test-output
+.classpath
+.project
+.settings

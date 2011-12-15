@@ -7,8 +7,13 @@ package com.blade.lib.core;
 import static org.testng.Assert.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
@@ -45,14 +50,23 @@ public class HttpUtilTest {
 	}
 
     @Test
-    public void testGet() throws JSONException {
-    	JSONObject response = HttpUtil.get("http://localhost:9898/get_path");
-    	assertEquals(response.toString(), "{\"msg\":\"Get Response\"}");
+    public void testGet() throws IOException, JSONException {
+    	HttpResponse response = HttpUtil.get("http://localhost:9898/get_path");
+
+    	assertEquals(response.getStatusLine().getStatusCode(), 200);
+    	JSONObject json = HttpUtil.extractJSON(response);
+    	assertEquals(json.toString(), "{\"msg\":\"Get Response\"}");
     }
     
     @Test
-    public void testPost() throws JSONException {
-    	JSONObject response = HttpUtil.post("http://localhost:9898/post_path", "msg=Hello");
-    	assertEquals(response.toString(), "{\"msg\":\"Hello\"}");
+    public void testPost() throws IOException, JSONException {
+    	List<NameValuePair> params = new ArrayList<NameValuePair>();
+    	params.add(new BasicNameValuePair("msg", "Hello"));
+    	
+		HttpResponse response = HttpUtil.post("http://localhost:9898/post_path", params);
+    	
+    	assertEquals(response.getStatusLine().getStatusCode(), 200);
+    	JSONObject json = HttpUtil.extractJSON(response);
+    	assertEquals(json.toString(), "{\"msg\":\"Hello\"}");
     }
 }

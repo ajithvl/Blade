@@ -24,7 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class HttpUtil {
-    static final Logger logger = Logger.getLogger("blade");
+    static final Logger logger = Logger.getLogger(HttpUtil.class);
 
     public static HttpResponse get(String url) throws IOException {
     	logger.debug("GET-ing URL: " + url);

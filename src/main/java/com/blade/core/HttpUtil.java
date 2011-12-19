@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.blade.lib.core;
+package com.blade.core;
 
 /**
  *
@@ -24,7 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class HttpUtil {
-    static final Logger logger = Logger.getLogger(HttpUtil.class);
+    static final Logger logger = Logger.getLogger("blade");
 
     public static HttpResponse get(String url) throws IOException {
     	logger.debug("GET-ing URL: " + url);

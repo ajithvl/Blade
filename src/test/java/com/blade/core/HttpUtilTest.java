@@ -4,7 +4,6 @@ package com.blade.core;
  *
  * @author avarakukalayil
  */
-import com.blade.core.HttpUtil;
 import static org.testng.Assert.*;
 
 import java.io.IOException;
@@ -20,8 +19,6 @@ import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import com.blade.testutil.NanoHTTPD;
 
 public class HttpUtilTest {
 

@@ -1,38 +1,29 @@
 package com.blade;
 
+import com.blade.core.HttpUtil;
 import com.blade.core.NanoHTTPD;
-import com.blade.core.RuntimeReporter;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
+import com.blade.ui.BladeUI;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
-import org.testng.ITestContext;
-import org.testng.TestListenerAdapter;
+import org.apache.log4j.Logger;
 import org.testng.TestNG;
-import org.testng.xml.XmlSuite;
 
 /**
  *
  * @author avarakukalayil
  */
 public class Launcher {
-    
-    public static void main(String[] args) throws Exception{
+    static final Logger logger = Logger.getLogger(Launcher.class);
+    final static int listeningPort = 9897;
+
+    public static void main(String[] args) throws Exception {
         
         /*
-         * Invoking HTTP server to listen to commands
-         * COMMANDS:
-         * 1) skip      : Skip all the tests in the list
-         * 2) abort     : Gracefully abort all the pending tests
+         * Invoking HTTP server to listen to commands COMMANDS: 1) skip : Skip
+         * all the tests in the list 2) abort : Gracefully abort all the pending
+         * tests
          */
-        
-        NanoHTTPD server = new NanoHTTPD(9898, null) {
+        NanoHTTPD server = new NanoHTTPD(listeningPort, null) {
 
             @Override
             public NanoHTTPD.Response serve(String uri, String method, Properties header, Properties parms, Properties files) {
@@ -49,15 +40,36 @@ public class Launcher {
         };
 
         
-       
         
-        //TestListenerAdapter tla = new RuntimeReporter();
-        TestNG testng = new TestNG();
-        //testng.addListener(tla);
-        
-        testng.setTestSuites(Arrays.asList("config/testng.xml"));
-        testng.run();
-        
+        // Build the UI
+        BladeUI ui = new BladeUI();
+        ui.setListeningPort(listeningPort);
+   
+        ui.uiLogger("JAVA HOME = " + Global.JAVA_HOME);
+        ui.uiLogger("JAVA VENDOR = " + Global.JAVA_VENDOR);
+        ui.uiLogger("JAVA VERSION = " + Global.JAVA_VERSION);
+        ui.uiLogger("OS ARCHITECTURE = " + Global.OS_ARCH);
+        ui.uiLogger("OS NAME = " + Global.OS_NAME);
+        ui.uiLogger("OS VERSION = " + Global.OS_VERSION);
+        ui.uiLogger("USER DIRECTORY = " + Global.USER_DIR);
+        ui.uiLogger("USER HOME = " + Global.USER_HOME);
+
+
+        try {
+            TestNG testng = new TestNG();
+
+            // Add all config files to 
+            for (String path : Global.getTestngXmlPaths()) {
+                testng.setTestSuites(Arrays.asList("config/" + path));
+            }
+
+            testng.run();
+        } catch (Exception e) {
+            System.out.println("TESTNG EXCEPTION");
+            e.printStackTrace();
+        }
+
+
         
         
         // Stops the HTTP server

@@ -1,0 +1,19 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+ 
+<suite name="SuiteXML" verbose="1">
+    <test name="RegressionXML">
+        <!--        
+        <packages>
+            <package name="com.blade.tester" />
+        </packages>
+        -->
+        <classes>
+            <class name="com.blade.TesterDeleteMe"  />
+        </classes>
+
+        <listeners>
+            <listener class-name="com.blade.listeners.RuntimeHooker" />
+            <listener class-name="com.blade.listeners.MethodListener" />
+        </listeners>
+    </test>
+</suite>

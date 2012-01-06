@@ -4,6 +4,7 @@ package com.blade.core;
  *
  * @author avarakukalayil
  */
+import com.blade.lib.HttpUtil;
 import static org.testng.Assert.*;
 
 import java.io.IOException;

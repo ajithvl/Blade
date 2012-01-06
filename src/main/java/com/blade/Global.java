@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.blade;
 
-import com.blade.core.HttpUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Properties;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
@@ -43,6 +39,14 @@ public class Global {
     private static String propellerHost = System.getProperty("propeller.host");
     private static String systemMonitor = System.getProperty("system.monitor");
     public static String customParameter = System.getProperty("custom.parameter");
+    
+    
+    // OTHER PROPERTIES
+    public static ArrayList<String> toBeSkipped = new ArrayList();
+    public static boolean shutdown = false;
+    
+    
+    
     
     
     public static synchronized String getLogLevel() {
@@ -136,10 +140,10 @@ public class Global {
     
     public static synchronized void setBrowserName(String browser) {
         browser = browser.trim();
-        if(browser.toLowerCase().equals("ie") || browser.toLowerCase().equals("iexplore")) {
+        if(browser.toLowerCase().equals("ie")) {
             logger.debug("Setting browser to [IE]");
             browserName = "IE";
-        } else if(browser.toLowerCase().equals("ff") || browser.toLowerCase().equals("firefox")){
+        } else if(browser.toLowerCase().equals("ff")){
             logger.debug("Setting browser to [Firefox]");
             browserName = "FIREFOX";
         } else if(browser.toLowerCase().equals("chrome")){
@@ -155,7 +159,7 @@ public class Global {
         
     }
     
-    public static synchronized void  setTestngXmlPaths(String xmlPaths) throws Exception {
+    public static synchronized void setTestngXmlPaths(String xmlPaths) throws Exception {
         testngXmlPaths = xmlPaths;
     }
     
@@ -171,4 +175,8 @@ public class Global {
         customParameter = custParams;
     }
     
+    public static synchronized void setToBeSkipped(String tests) {
+        toBeSkipped.clear();
+        Collections.addAll(toBeSkipped, Pattern.compile(",").split(tests));
+    }    
 }

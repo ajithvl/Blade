@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.blade.core;
+package com.blade.listeners.reporters;
 
 import java.util.List;
 import org.testng.IReporter;

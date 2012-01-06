@@ -1,12 +1,10 @@
 package com.blade;
 
-import com.blade.core.HttpUtil;
 import com.blade.core.NanoHTTPD;
+import com.blade.listeners.reporters.RuntimeReporter;
 import com.blade.ui.BladeUI;
-import java.util.Arrays;
 import java.util.Properties;
 import org.apache.log4j.Logger;
-import org.testng.TestNG;
 
 /**
  *
@@ -14,6 +12,8 @@ import org.testng.TestNG;
  */
 public class Launcher {
     static final Logger logger = Logger.getLogger(Launcher.class);
+    
+    // Listening port (Propeller will control blade via this port)
     final static int listeningPort = 9897;
 
     public static void main(String[] args) throws Exception {
@@ -27,13 +27,43 @@ public class Launcher {
 
             @Override
             public NanoHTTPD.Response serve(String uri, String method, Properties header, Properties parms, Properties files) {
-                if ("/skip".equals(uri) && "POST".equals(method)) {
-                    Object msgParam = parms.get("msg");
-                    return new NanoHTTPD.Response("200", "application/json", "{\"msg\":\"Skipping\"}");
-                }
-                if ("/abort".equals(uri) && "POST".equals(method)) {
-                    Object msgParam = parms.get("msg");
-                    return new NanoHTTPD.Response("200", "application/json", "{\"msg\":\"Aborting\"}");
+                if ("/run".equals(uri) && "POST".equals(method)) {
+                    try {
+                        //Object msgParam = parms.get("msg");
+                        Global.setProjectName(parms.get("project_name").toString());
+                        Global.setTestPlanId(parms.get("testplan_id").toString());
+                        Global.setBuildId(parms.get("build_id").toString());
+                        Global.setRunId(parms.get("run_id").toString());
+                        Global.setTestngXmlPaths(parms.get("xml_paths").toString());
+                        Global.setLogLevel(parms.get("log_level").toString());
+                        Global.setSystemMonitor(parms.get("monitor").toString());
+                        Global.setCustomParameter(parms.get("custom_params").toString());
+                        Global.setPropellerHost(parms.get("propeller_host").toString());
+                        Global.setBrowserName(parms.get("browser").toString());
+                        TestRunner runner = new TestRunner();
+                        runner.attachListner(new RuntimeReporter());
+                        runner.execute();
+                    } catch (Exception e) {
+                        logger.error(e.getStackTrace());
+                        return new NanoHTTPD.Response("500", "application/json", "{\"status\":\"Failed\",\"reason\":\"" + e.getMessage() + "\"}");
+                    }
+                    return new NanoHTTPD.Response("200", "application/json", "{\"status\":\"ok\"}");
+                } else if ("/skip".equals(uri) && "POST".equals(method)) {
+                    try {
+                        Global.setToBeSkipped(parms.get("skip").toString());
+                    } catch (Exception e) {
+                        logger.error(e.getStackTrace());
+                        return new NanoHTTPD.Response("500", "application/json", "{\"status\":\"Failed\",\"reason\":\"" + e.getMessage() + "\"}");
+                    }
+                    return new NanoHTTPD.Response("200", "application/json", "{\"status\":\"ok\"}");
+                } else if ("/shutdown".equals(uri) && "POST".equals(method)) {
+                    try {
+                        Global.shutdown = true;
+                    } catch (Exception e) {
+                        logger.error(e.getStackTrace());
+                        return new NanoHTTPD.Response("500", "application/json", "{\"status\":\"Failed\",\"reason\":\"" + e.getMessage() + "\"}");
+                    }
+                    return new NanoHTTPD.Response("200", "application/json", "{\"status\":\"ok\"}");
                 }
                 return new NanoHTTPD.Response("404", "text/plain", "Not Found");
             }
@@ -53,26 +83,15 @@ public class Launcher {
         ui.uiLogger("OS VERSION = " + Global.OS_VERSION);
         ui.uiLogger("USER DIRECTORY = " + Global.USER_DIR);
         ui.uiLogger("USER HOME = " + Global.USER_HOME);
+        ui.uiLogger("------------------------------------------------------------------------------------");
+        
+        
 
-
-        try {
-            TestNG testng = new TestNG();
-
-            // Add all config files to 
-            for (String path : Global.getTestngXmlPaths()) {
-                testng.setTestSuites(Arrays.asList("config/" + path));
-            }
-
-            testng.run();
-        } catch (Exception e) {
-            System.out.println("TESTNG EXCEPTION");
-            e.printStackTrace();
-        }
 
 
         
         
         // Stops the HTTP server
-        server.stop();
+        //server.stop();
     }
 }

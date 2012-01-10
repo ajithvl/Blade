@@ -4,3 +4,6 @@ test-output
 .classpath
 .project
 .settings
+/src/main/java/com/blade/test/GenieTest.java
+/src/main/java/com/blade/test/SeleniumTest.java
+/GenieLogs/

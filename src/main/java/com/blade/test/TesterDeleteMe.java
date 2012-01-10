@@ -1,4 +1,4 @@
-package com.blade;
+package com.blade.test;
 
 import com.blade.lib.Sikuli;
 import org.testng.Assert;

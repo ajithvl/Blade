@@ -45,7 +45,7 @@ public class Global {
     public static ArrayList<String> toBeSkipped = new ArrayList();
     public static boolean shutdown = false;
     
-    
+    public static boolean TEST_STATUS = false;
     
     
     
@@ -116,6 +116,7 @@ public class Global {
 
     public static synchronized void setLogLevel(String ll) {
         logLevel = ll;
+        System.setProperty("blade.log.level", ll);
     }
     
     public static synchronized void setRunControlId(String rcid) {

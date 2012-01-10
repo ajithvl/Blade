@@ -1,9 +1,10 @@
-package com.blade.core;
+package com.blade.lib;
 
 /**
  *
  * @author avarakukalayil
  */
+import com.blade.core.NanoHTTPD;
 import com.blade.lib.HttpUtil;
 import static org.testng.Assert.*;
 

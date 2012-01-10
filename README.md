@@ -22,4 +22,6 @@ Features:
 Usage:
 --------
 
+1) Pack all your tests in a jar file called Fuel.jar
+2) Execute "java -cp fuel.jar;blade.jar com.blade.Launcher" from the command prompt
 

@@ -54,11 +54,6 @@
             <artifactId>sikuli-core</artifactId>
             <version>1.0rc3</version>
         </dependency>
-        <dependency>
-            <groupId>org.genie</groupId>
-            <artifactId>genie-executor</artifactId>
-            <version>1.5.1.1</version>
-        </dependency>
     
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>

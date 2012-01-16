@@ -8,6 +8,9 @@ import com.blade.Global;
 import com.blade.Launcher;
 import com.blade.TestRunner;
 import com.blade.listeners.MethodInterceptor;
+import com.blade.listeners.MethodListener;
+import com.blade.listeners.RuntimeHooker;
+import com.blade.listeners.reporters.FinalReporter;
 import com.blade.listeners.reporters.UIReporter;
 import java.awt.Desktop;
 import java.io.File;
@@ -30,6 +33,10 @@ import org.testng.TestNG;
 public class BladeUI extends javax.swing.JFrame {
 
     static final Logger logger = Logger.getLogger(BladeUI.class);
+    
+    
+    TestRunner runner;
+    
     
     /**
      * Creates new form NetbeansSwing
@@ -489,8 +496,14 @@ public class BladeUI extends javax.swing.JFrame {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        TestRunner runner = new TestRunner();
+                        
+                        runner = new TestRunner();
                         runner.attachListner(new UIReporter(ui));
+                        runner.attachListner(new RuntimeHooker());
+                        runner.attachListner(new MethodListener());
+                        runner.attachListner(new FinalReporter(ui));
+                        // Create a new directory to log every time
+                        runner.setOutputDir();
                         runner.execute();
                         return null;
                     }
@@ -557,7 +570,8 @@ public class BladeUI extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
-            Desktop.getDesktop().open(new File(TestNG.DEFAULT_OUTPUTDIR + "\\index.html"));
+            System.out.println("BladeUI: Test Output dir = " + runner.getOutputDir());
+            Desktop.getDesktop().open(new File(runner.getOutputDir() + "\\index.html"));
         } catch (IOException e) {
             e.printStackTrace();
         }

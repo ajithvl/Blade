@@ -2,11 +2,16 @@ package com.blade;
 
 import com.blade.core.NanoHTTPD;
 import com.blade.lib.HttpUtil;
+import com.blade.listeners.MethodListener;
+import com.blade.listeners.RuntimeHooker;
+import com.blade.listeners.reporters.FinalReporter;
 import com.blade.listeners.reporters.RuntimeReporter;
 import com.blade.ui.BladeUI;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -41,7 +46,7 @@ public class Launcher {
                         Global.setBuildId(parms.get("build_id").toString());
                         Global.setRunId(parms.get("run_id").toString());
                         Global.setTestngXmlPaths(parms.get("xml_paths").toString());
-//                        Global.setLogLevel(parms.get("log_level").toString());
+                        Global.setLogLevel(parms.get("log_level").toString());
                         Global.setSystemMonitor(parms.get("monitor").toString());
                         Global.setCustomParameter(parms.get("custom_params").toString());
                         Global.setPropellerHost(parms.get("propeller_host").toString());
@@ -53,6 +58,9 @@ public class Launcher {
                     // Execute testNG
                     TestRunner runner = new TestRunner();
                     runner.attachListner(new RuntimeReporter());
+                    runner.attachListner(new RuntimeHooker());
+                    runner.attachListner(new MethodListener());
+                    runner.setOutputDir();
                     runner.execute();
 
                     return new Response("200", "application/json", "{\"status\":\"ok\"}");
@@ -62,11 +70,16 @@ public class Launcher {
                 } else if ("/shutdown".equals(uri) && "GET".equals(method)) {
                     Global.shutdown = true;
                     return new Response("200", "application/json", "{\"status\":\"ok\"}");
+                } else if ("/fetchReport".equals(uri) && "GET".equals(method)) {
+                    File f = new File("./output/test/SampleProject_11-Jan-12_20-38-31");
+                    return serveFile( "/index.html", header, f, false );
                 }
                 logger.debug("404: page [" + uri + "] not found");
                 return new Response("404", "text/plain", "Not Found");
-
+                
             }
+            
+            
         };
 
 

@@ -1,8 +1,10 @@
 package com.blade;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import org.testng.TestListenerAdapter;
-import org.testng.TestNG;
+import java.util.Calendar;
+import org.apache.log4j.Logger;
+import org.testng.*;
 
 /**
  *
@@ -10,10 +12,21 @@ import org.testng.TestNG;
  */
 public class TestRunner {
 
+    static final Logger logger = Logger.getLogger(TestRunner.class);
+    
     TestNG testng = new TestNG();
 
    
     public void attachListner(TestListenerAdapter tla) {
+        testng.addListener(tla);
+    }
+    public void attachListner(IHookable tla) {
+        testng.addListener(tla);
+    }
+    public void attachListner(IInvokedMethodListener tla) {
+        testng.addListener(tla);
+    }
+    public void attachListner(IReporter tla) {
         testng.addListener(tla);
     }
 
@@ -32,13 +45,17 @@ public class TestRunner {
         }
     }
     
-    
-    public void skipTest(String suitName) {
-        //testng.g
+    public void setOutputDir() {
+        Calendar currentDate = Calendar.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yy_HH-mm-ss");
+        String out = "output\\test\\" + Global.getProjectName() + "_" + formatter.format(currentDate.getTime());
+        logger.debug("Setting output directory to: " + out);
+        testng.setOutputDirectory(out);
     }
     
-    public void skipTest(String suitName, String[] testNames) {
-        //testng.
+    public String getOutputDir() {
+        return testng.getOutputDirectory();
     }
+
     
 }

@@ -8,12 +8,13 @@
         </packages>
         -->
         <classes>
-            <class name="com.blade.test.SeleniumTest"  />
+            <class name="com.blade.test.TesterDeleteMe"  />
         </classes>
 
-        <listeners>
+<!--        <listeners>
             <listener class-name="com.blade.listeners.RuntimeHooker" />
             <listener class-name="com.blade.listeners.MethodListener" />
-        </listeners>
+            <listener class-name="com.blade.listeners.reporters.FinalReporter" />
+        </listeners>-->
     </test>
 </suite>
